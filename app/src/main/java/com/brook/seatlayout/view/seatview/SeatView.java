@@ -24,7 +24,6 @@ public class SeatView extends SeatRootView {
 
     private int mLastX, mLastY;
     private int moveX, moveY, mMoveX, mMoveY;
-    private int mMoveXTemp;
 
     private GestureDetector mGestureDetector;
 
@@ -119,9 +118,15 @@ public class SeatView extends SeatRootView {
         }
         mCanScrollY = mSeatHeight + getPaddingTop() - mThisHeight + mLastSeatSpace > 0; // 多出一个座位的距离
         mCanScrollHeight = (int) (mSeatHeight + getPaddingTop() - mThisHeight + mLastSeatSpace);
+        if (mCanScrollHeight < 0) {
+            mCanScrollHeight = 0;
+        }
 
         mCanScrollX = mSeatWidth + getPaddingLeft() - mThisWidth + mLastSeatSpace > 0; // 多出一个座位的距离
         mCanScrollWidth = (int) (mSeatWidth + getPaddingLeft() - mThisWidth + mLastSeatSpace);
+        if (mCanScrollWidth < 0) {
+            mCanScrollWidth = 0;
+        }
         if (mLastScale == 1.0f) {
             mCanMoveXTemp = mCanScrollWidth;
             mCanMoveYTemp = mCanScrollHeight;
@@ -181,43 +186,47 @@ public class SeatView extends SeatRootView {
                             mSeatTextSize = mSeatTextSizeTemp;
                             mScaleTemp = 1.0f;
                             mMoveX = mCanMoveXTemp;
-//                            scrollBy(mCanMoveXTemp - mCanScrollWidth, 0);
                         } else {
                             mSeatMinWidth = mSeatMinWidthTemp * mLastScale * mScale;
                             mSeatMinHeight = mSeatMinHeightTemp * mLastScale * mScale;
                             mSeatTextSize = mSeatTextSizeTemp * mLastScale * mScale;
                             mSeatWidthTemp = mSeatMinWidthTemp * mScaleTemp;
                             // 判断四个方向上面是否可以移动，可以移动时，向相反方向缩放，不可以移动时，向这个方向缩放
-                            if (getPaddingLeft() + mLastSeatSpace + mSeatWidth - mMoveX < mThisWidth && mCanScrollX) { // 右边不可移动
-                                mMoveX = mMoveX - (mCanMoveXTemp - mCanScrollWidth);
+                            if (mCanScrollWidth <= mMoveX && mCanScrollX) { // 右边不可移动
+//                                mMoveX = mMoveX - (mCanMoveXTemp - mCanScrollWidth);
+                                mMoveX = mCanScrollWidth;
                                 if (mCanScrollWidth - mCanMoveXTemp <= 0) {
                                     scrollBy(mCanScrollWidth - mCanMoveXTemp, 0);
                                 }
-                                if (mMoveX >= mCanScrollWidth) {
-                                    mMoveX = mCanScrollWidth;
-                                } else if (mMoveX <= 0) {
-                                    mMoveX = 0;
-                                }
+//                                if (mMoveX >= mCanScrollWidth) {
+//                                    mMoveX = mCanScrollWidth;
+//                                } else if (mMoveX <= 0) {
+//                                    mMoveX = 0;
+//                                }
                                 mLastMoveXTemp = mMoveX;
                                 Log.e(TAG, "==mCanScrollWidth==" + mMoveX);
+                            } else {
+                                mMoveX = 0;
                             }
-
 
                             if (mMoveX <= 0) { // 左侧不可移动
                                 mMoveX = 0;
                             }
 
-                            if (getPaddingTop() + mLastSeatSpace + mSeatHeight - mMoveY < mThisHeight && mCanScrollY) { // 底部不可移动
-                                mMoveY = mMoveY - (mCanMoveYTemp - mCanScrollHeight);
+                            if (mCanScrollHeight <= mMoveY && mCanScrollY) { // 底部不可移动
+//                                mMoveY = mMoveY - (mCanMoveYTemp - mCanScrollHeight);
+                                mMoveY = mCanScrollHeight;
                                 if (mCanScrollHeight - mCanMoveYTemp <= 0) {
                                     scrollBy(0, mCanScrollHeight - mCanMoveYTemp);
                                 }
-                                if (mMoveY >= mCanScrollHeight) {
-                                    mMoveY = mCanScrollHeight;
-                                } else if (mMoveY <= 0) {
-                                    mMoveY = 0;
-                                }
+//                                if (mMoveY >= mCanScrollHeight) {
+//                                    mMoveY = mCanScrollHeight;
+//                                } else if (mMoveY <= 0) {
+//                                    mMoveY = 0;
+//                                }
                                 mLastMoveYTemp = mMoveY;
+                            } else {
+                                mMoveY = 0;
                             }
 
                             if (mMoveY <= 0) { // 顶部不可移动
