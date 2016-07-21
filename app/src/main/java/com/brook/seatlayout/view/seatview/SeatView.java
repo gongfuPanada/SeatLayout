@@ -205,11 +205,9 @@ public class SeatView extends SeatRootView {
 //                                }
                                 mLastMoveXTemp = mMoveX;
                                 Log.e(TAG, "==mCanScrollWidth==" + mMoveX);
-                            } else {
-                                mMoveX = 0;
                             }
 
-                            if (mMoveX <= 0) { // 左侧不可移动
+                            if (mMoveX <= 0 && mCanScrollX) { // 左侧不可移动
                                 mMoveX = 0;
                             }
 
@@ -219,17 +217,10 @@ public class SeatView extends SeatRootView {
                                 if (mCanScrollHeight - mCanMoveYTemp <= 0) {
                                     scrollBy(0, mCanScrollHeight - mCanMoveYTemp);
                                 }
-//                                if (mMoveY >= mCanScrollHeight) {
-//                                    mMoveY = mCanScrollHeight;
-//                                } else if (mMoveY <= 0) {
-//                                    mMoveY = 0;
-//                                }
                                 mLastMoveYTemp = mMoveY;
-                            } else {
-                                mMoveY = 0;
                             }
 
-                            if (mMoveY <= 0) { // 顶部不可移动
+                            if (mMoveY <= 0 && mCanScrollY) { // 顶部不可移动
                                 mMoveY = 0;
                             }
 
